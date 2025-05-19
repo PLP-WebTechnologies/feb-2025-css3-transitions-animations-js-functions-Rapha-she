@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CSS Animation + Local Storage Demo</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div class="container">
+    <h1>Welcome!</h1>
+    <button id="themeBtn">Toggle Theme Color</button>
+    <p id="status"></p>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
+style.css
+css
+Copy
+Edit
+body {
+  font-family: Arial, sans-serif;
+  background-color: white;
+  color: #333;
+  transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+body.dark-theme {
+  background-color: #222;
+  color: #eee;
+}
+
+.container {
+  text-align: center;
+  margin-top: 100px;
+}
+
+/* Button styling with transition */
+button {
+  padding: 12px 25px;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 6px;
+  background-color: #007acc;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+/* Animate button on click with a "bounce" effect */
+button.animate {
+  animation: bounce 0.5s;
+}
+
+/* Bounce keyframes */
+@keyframes bounce {
+  0%   { transform: translateY(0); }
+  30%  { transform: translateY(-15px); }
+  50%  { transform: translateY(0); }
+  70%  { transform: translateY(-7px); }
+  100% { transform: translateY(0); }
+}
+script.js
+js
+Copy
+Edit
+const button = document.getElementById('themeBtn');
+const status = document.getElementById('status');
+
+function toggleTheme() {
+  // Toggle dark theme class on body
+  document.body.classList.toggle('dark-theme');
+
+  // Save preference in localStorage
+  if (document.body.classList.contains('dark-theme')) {
+    localStorage.setItem('theme', 'dark');
+    status.textContent = 'Dark theme enabled.';
+  } else {
+    localStorage.setItem('theme', 'light');
+    status.textContent = 'Light theme enabled.';
+  }
+
+  // Trigger animation
+  button.classList.add('animate');
+}
+
+// Remove animation class after animation ends to allow re-triggering
+button.addEventListener('animationend', () => {
+  button.classList.remove('animate');
+});
+
+button.addEventListener('click', toggleTheme);
+
+// On page load, restore theme from localStorage
+window.addEventListener('DOMContentLoaded', () => {
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme === 'dark') {
+    document.body.classList.add('dark-theme');
+    status.textContent = 'Dark theme enabled.';
+  } else {
+    status.textContent = 'Light theme enabled.';
+  }
+});
